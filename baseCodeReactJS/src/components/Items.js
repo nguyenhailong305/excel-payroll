@@ -22,6 +22,8 @@ class Items extends Component {
     dateAll: [],
     month: [],
     week: [],
+    timeworkInfo : [],
+    timework200 : []
   };
 
   
@@ -96,23 +98,25 @@ class Items extends Component {
 
     // Add the weekdays, days, and months of the month to the worksheet
     const daysInMonth = dayjs().daysInMonth();
+    console.log(daysInMonth , 'month' )
     let a = [];
     let b = [];
     for (let i = 1; i <= daysInMonth; i++) {
       const url = (worksheet.getCell(`B1`).value = dayjs()
         .date(i)
-        .format("DD/M"));
+        .format("D/M"));
       a.push(url);
       this.setState({
         month: a,
       });
     }
 
+
     
 
     dayjs.locale('vi');
-    
-    for (let i = 0; i <= daysInMonth; i++) {
+  
+    for (let i = 1; i <= daysInMonth; i++) {
       const date = dayjs().add(i, 'day');  // update the day inside the loop
       const weekday = date.format('dd');  // format the date as the name of the weekday in Vietnamese
       
@@ -125,7 +129,41 @@ class Items extends Component {
         });
       }
     }
-   
+
+
+    const timework = [];
+    for(let i = 1 ; i <= daysInMonth ; i++) {
+      const date = dayjs().add(i, 'day');  // update the day inside the loop
+      const weekday = date.format('dd');
+      const url = (worksheet.getCell(`B1`).value = dayjs()
+        .date(i)
+        .format("DD/M"));
+      if(weekday === 'T7' || weekday === 'CN') {
+        timework.push('x')
+      // eslint-disable-next-line no-mixed-operators
+      }else if (weekday === 'T5' && url === '01/12' || weekday === 'T6' && url === '02/12') {
+        timework.push('0,00')
+      }else {
+        timework.push('8,00')
+      }
+      this.setState({
+        timeworkInfo : timework 
+      })
+    }
+
+    const timework200 = [];
+    for(let i = 1; i <= daysInMonth ; i++) {
+      const date = dayjs().add(i, 'day');  // update the day inside the loop
+      const weekday = date.format('dd');
+      if(weekday === 'T7' || weekday === 'CN') {
+        timework200.push('x')
+      }else {
+        timework200.push('0')
+      }
+      this.setState({
+        timework200 : timework200 
+      })
+    }
 
     // Day of the week
     const columns = this.state.month.map((items) => ({
@@ -139,7 +177,14 @@ class Items extends Component {
 
     console.log(columnss, "2222");
 
-   
+    const columnsss = this.state.timeworkInfo.map((items) => items);
+
+    console.log(columnsss, "2222");
+
+    const columnssss = this.state.timework200.map((items) => items);
+
+    console.log(columnssss, "2222");
+
 
     const rows = this.props.items.map((entry) => Object.values(entry));
     console.log(rows, "aaaaaaaaaaa");
@@ -153,6 +198,8 @@ class Items extends Component {
 
     const table = worksheet.getTable("sheet1");
     worksheet.insertRow(2, columnss);
+    worksheet.insertRow(3, columnsss);
+    worksheet.insertRow(4, columnssss);
     table.commit();
 
     worksheet.mergeCells("A1:A2");
