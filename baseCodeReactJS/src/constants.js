@@ -33,4 +33,4 @@ export const DELETE_ALL_REQUEST = 'DELETE_ALL_REQUEST'
 export const DELETE_ALL_SUCCESS = 'DELETE_ALL_SUCCESS'
 export const DELETE_ALL_FAILURE = 'DELETE_ALL_FAILURE'
 
-export const LIMIT = 20
+export const LIMIT = 5

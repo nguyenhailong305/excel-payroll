@@ -1,6 +1,6 @@
 const Models = require('../model/index')
-var XLSX = require("xlsx");
-// const Excel = require('exceljs'); 
+// var XLSX = require("xlsx");
+const Excel = require('exceljs'); 
 const fs= require('fs')
 
 
@@ -17,34 +17,34 @@ exports.addExcel = async (req , res , _next) => {
     try {
         let file = req.files
       
-    //     const workbook = new Excel.Workbook();
+        const workbook = new Excel.Workbook();
        
-    //     await workbook.xlsx.readFile(file[0].path);
-    //     let jsonData = [];
-    //      workbook.worksheets.forEach(function(sheet) {
-    //     // read first row as data keys
-    //     let firstRow = sheet.getRow(1);
-    //     if (!firstRow.cellCount) return;
-    //     let keys = firstRow.values;
-    //     sheet.eachRow((row, rowNumber) => {
-    //         if (rowNumber == 1) return;
-    //         let values = row.values
-    //         let obj = {};
-    //         for (let i = 1; i < keys.length; i ++) {
-    //             obj[keys[i]] = values[i];
-    //         }
-    //         jsonData.push(obj);
-    //     })
+        await workbook.xlsx.readFile(file[0].path);
+        let jsonData = [];
+         workbook.worksheets.forEach(function(sheet) {
+        // read first row as data keys
+        let firstRow = sheet.getRow(1);
+        if (!firstRow.cellCount) return;
+        let keys = firstRow.values;
+        sheet.eachRow((row, rowNumber) => {
+            if (rowNumber == 1) return;
+            let values = row.values
+            let obj = {};
+            for (let i = 1; i < keys.length; i ++) {
+                obj[keys[i]] = values[i];
+            }
+            jsonData.push(obj);
+        })
 
-    // });
-    // console.log(jsonData);
-        let wb = XLSX.readFile(file[0].path) 
-        let ws = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
-        console.log(wb , ws , "aaaaaaaaaaa");
+    });
+    console.log(jsonData);
+        // let wb = XLSX.readFile(file[0].path) 
+        // let ws = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
+        // console.log(wb , ws , "aaaaaaaaaaa");
 
-         Models.insertMany(ws, (error, data) => {
+         Models.insertMany(jsonData, (error, data) => {
             console.log(data , 'aaaaaaaaaa')
-            res.send({ws , message: "Success"})
+            res.send({jsonData , message: "Success"})
         })
         
           
@@ -154,7 +154,7 @@ exports.searchItem = async(req, res, _next) => {
       };
        
 
-exports.deleteAll = async (req , res , next) => {
+exports.deleteAll = async (req , res , next) => { 
     try {
         console.log(req.body);
         const idLock = req.body.idLock

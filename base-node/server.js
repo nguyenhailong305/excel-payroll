@@ -1,4 +1,5 @@
-var express = require('express')
+var express = require('express');
+const routers = require('./api/route');
 
   app = express(),
   port = process.env.PORT || 3001,
@@ -28,12 +29,18 @@ const storage = multer.diskStorage({
   }
 })
 
+app.set('views', path.join(__dirname, 'views'));
+
+ 
+
 const upload = multer({ storage: storage }).any()
 app.use(upload)
 app.use(express.static("excel"))
 
 var routes = require('./api/route');
 routes(app);
+
+app.use('/', routers);
 
 app.use(function(req, res) {
   res.status(404).send({url: req.originalUrl + ' not found'})

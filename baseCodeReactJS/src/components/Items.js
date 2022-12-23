@@ -1,227 +1,404 @@
 /* eslint-disable no-undef */
-import Table from 'react-bootstrap/Table';
-import React, { Component } from 'react';
-// import * as XLSX from 'xlsx'; 
-import * as fs from 'file-saver';
-import {CSVLink } from "react-csv";
-const Excel = require('exceljs'); 
-
-
+import Table from "react-bootstrap/Table";
+import React, { Component } from "react";
+// import * as XLSX from 'xlsx';
+import * as fs from "file-saver";
+import { CSVLink } from "react-csv";
+const Excel = require("exceljs");
+const dayjs = require("dayjs");
+import ('dayjs/locale/vi')
 class Items extends Component {
-    state = {
-        id: "",
-        name : "",
-        age :"",
-        nameUpdate : "",
-        ageUpdate : "",
-        idUpdate : "",
-        file : [],
-        idLock : []
+  state = {
+    id: "",
+    name: "",
+    age: "",
+    nameUpdate: "",
+    ageUpdate: "",
+    idUpdate: "",
+    file: [],
+    idLock: [],
+    thu: [],
+    timeWork: [],
+    dateAll: [],
+    month: [],
+    week: [],
+  };
 
+  
+
+  handleId = (a) => {
+    const idLockNew = [...this.state.idLock];
+    if (idLockNew.includes(a)) {
+      idLockNew.splice(idLockNew.indexOf(a), 1);
+    } else {
+      idLockNew.push(a);
     }
+    console.log(idLockNew);
+    this.setState({ idLock: idLockNew });
+  };
 
-    handleId = (a) => {
-      const idLockNew = [...this.state.idLock]
-      if(idLockNew.includes(a)){
-        idLockNew.splice(idLockNew.indexOf(a), 1)
-      }else {
-        idLockNew.push(a)
-      }
-      console.log(idLockNew);
-      this.setState({idLock : idLockNew})
-    }
+  // handleExport = async (sheetName) => {
+  //   const setExport =this.props.items.filter(item => this.state.idLock.includes(item._id))
+  //   this.props.items.map((item , key) =>
+  //     item._id = key + 1
+  //   )
 
-    handleExport = async (sheetName) => {
-      const setExport =this.props.items.filter(item => this.state.idLock.includes(item._id))
-      this.props.items.map((item , key) => 
-        item._id = key + 1
-      )  
+  //   const workbook = new Excel.Workbook()
+  //   const  workSheet = workbook.addWorksheet(sheetName)
 
+  //   const columns = Object.keys(this.props.items[0]).map((items) => ({
+  //       name: items,
+  //     }))
 
-      const workbook = new Excel.Workbook()
-      const  workSheet = workbook.addWorksheet(sheetName)
-    
- 
-      const columns = Object.keys(this.props.items[0]).map((items) => ({
-          name: items,
-        }))
-       
-        const rows = setExport.map((entry) => Object.values(entry))
+  //     const rows = setExport.map((entry) => Object.values(entry))
 
-        workbook.getWorksheet("sheet1").addTable({
-          name: "sheet1",
-          ref: 'H1',
-          columns,
-          rows
-        })
-      
-       
-      workSheet.eachRow((row, rowNumber ) => {
-          row.eachCell((cell) => {
-            console.log(rowNumber);
-            if (rowNumber === 1) {
-              cell.fill = {
-                type: "pattern",
-                pattern: "solid",
-                fgColor: { argb: "FFFF00" },
-              };
-            }
-          
-          });
-         
-          row.commit();
-          });
+  //     workbook.getWorksheet("sheet1").addTable({
+  //       name: "sheet1",
+  //       ref: 'H1',
+  //       columns,
+  //       rows
+  //     })
 
-         
-          workbook.xlsx.writeBuffer().then((data) => {
-            let blob =  new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  //   workSheet.eachRow((row, rowNumber ) => {
+  //       row.eachCell((cell) => {
+  //         console.log(rowNumber);
+  //         if (rowNumber === 1) {
+  //           cell.fill = {
+  //             type: "pattern",
+  //             pattern: "solid",
+  //             fgColor: { argb: "FFFF00" },
+  //           };
+  //         }
 
-            fs.saveAs(blob, 'CarData.xlsx');
+  //       });
+
+  //       row.commit();
+  //       });
+
+  //       workbook.xlsx.writeBuffer().then((data) => {
+  //         let blob =  new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+  //         fs.saveAs(blob, 'CarData.xlsx');
+  //   });
+  // }
+  
+
+  handleExportAll = async (sheetName) => {
+    this.props.items.map((item, key) => (item._id = key + 1));
+
+    const workbook = new Excel.Workbook();
+    const worksheet = workbook.addWorksheet(sheetName);
+
+    // Set the column widths for columns A, B, and C
+    worksheet.getColumn(1).width = 30;
+
+  
+
+    // Add the weekdays, days, and months of the month to the worksheet
+    const daysInMonth = dayjs().daysInMonth();
+    let a = [];
+    let b = [];
+    for (let i = 1; i <= daysInMonth; i++) {
+      const url = (worksheet.getCell(`B1`).value = dayjs()
+        .date(i)
+        .format("DD/M"));
+      a.push(url);
+      this.setState({
+        month: a,
       });
     }
- 
+
+    
+
+    dayjs.locale('vi');
+    
+    for (let i = 0; i <= daysInMonth; i++) {
+      const date = dayjs().add(i, 'day');  // update the day inside the loop
+      const weekday = date.format('dd');  // format the date as the name of the weekday in Vietnamese
+      
+      const cell = worksheet.getCell(`B2`);
+      if (cell) {  // check if the cell exists
+        const urls = cell.value = weekday;  // access the value property if the cell exists
+        b.push(urls);
+        this.setState({
+          week: b
+        });
+      }
+    }
+   
+
+    // Day of the week
+    const columns = this.state.month.map((items) => ({
+      name: items,
+    }));
+
+    console.log(columns, "111");
+
+
+    const columnss = this.state.week.map((items) => items);
+
+    console.log(columnss, "2222");
 
    
 
-    handleExportAll = async(sheetName) => {
-      this.props.items.map((item , key) => 
-        item._id = key + 1
-      )  
+    const rows = this.props.items.map((entry) => Object.values(entry));
+    console.log(rows, "aaaaaaaaaaa");
 
-      const workbook = new Excel.Workbook()
-      const  workSheet = workbook.addWorksheet(sheetName)
-    
-    
-      const columns = Object.keys(this.props.items[1]).map((items) => ({
-          name: items,
-          width : 5000
-        }))
-        console.log(columns , 'aaaaaaaaaaaa')
-      
+    workbook.getWorksheet("sheet1").addTable({
+      name: "sheet1",
+      ref: "B1",
+      columns: columns,
+      rows,
+    });
 
-      
+    const table = worksheet.getTable("sheet1");
+    worksheet.insertRow(2, columnss);
+    table.commit();
 
-        const rows = this.props.items.map((entry) => Object.values(entry))
-        workbook.getWorksheet("sheet1").addTable({
-          name: "sheet1",
-          ref: 'A1',
-          columns,
-          rows
-        })
-        workSheet.mergeCells("B6:E6")
-        workSheet.mergeCells("B7:E7")
+    worksheet.mergeCells("A1:A2");
+    worksheet.mergeCells("B6:AF6");
+    worksheet.mergeCells("B7:AF7");
+    worksheet.mergeCells("B8:AF8");
+    worksheet.mergeCells("B9:AF9");
+    worksheet.mergeCells("B10:AF10");
+    worksheet.mergeCells("B11:AF11");
+    worksheet.mergeCells("B12:AF12");
+    worksheet.mergeCells("B13:AF13");
 
-        workSheet.getTable("sheet1").removeColumns(0,1)
-        workSheet.getTable("sheet1").removeRows(1,1)
-        workSheet.getTable("sheet1").commit()
+    worksheet.getCell("A2").value = "Vuong Quoc Tuan";
+    worksheet.getCell("A3").value = "Thời gian làm việc";
+    worksheet.getCell("A4").value = "Thời gian OT 150%";
+    worksheet.getCell("A5").value = "Thời gian OT 200%";
+    worksheet.getCell("A6").value = "Thời gian OT 300%";
+    worksheet.getCell("A7").value = "Thưởng";
+    worksheet.getCell("A8").value = "Hỗ trợ";
+    worksheet.getCell("A9").value = "Bảo hiểm";
+    worksheet.getCell("A10").value = "Vay tháng này";
+    worksheet.getCell("A11").value = "Trừ nợ tháng này";
+    worksheet.getCell("A12").value = "Còn nợ";
+    worksheet.getCell("A13").value = "Lương thực tế nhận được";
 
-      workSheet.eachRow((row, rowNumber ) => {
-          row.eachCell((cell) => {
-            console.log(rowNumber);
-            if (rowNumber === 1) {
-              cell.fill = {
-                type: "pattern",
-                pattern: "solid",
-                fgColor: { argb: "FFFF00" },
-              };
-            }
+    // const columns = Object.keys(this.props.items[1]).map((items) => ({
+    //     name: items,
+    //     width : 5000
+    //   }))
+    //   console.log(columns , 'aaaaaaaaaaaa')
 
-            if (rowNumber === 2) {
-              cell.fill = {
-                type: "pattern",
-                pattern: "solid",
-                fgColor: { argb: "FFF02" },
-              };
-            }
-          
-            if (rowNumber === 3) {
-              cell.fill = {
-                type: "pattern",
-                pattern: "solid",
-                fgColor: { argb: "FFF" },
-              };
-            }
-          
-            if (rowNumber === 4) {
-              cell.fill = {
-                type: "pattern",
-                pattern: "solid",
-                fgColor: { argb: "FFFF00" },
-              };
-            }
-          
-          
-            
-            cell.border = {
-              top: { style: "thin" },
-              left: { style: "thin" },
-              bottom: { style: "thin" },
-              right: { style: "thin" },
-            };
-          });
-         
-          row.commit();
-          });
+    //   function getDaysInMonth(year, month) {
+    //     return new Date(year, month, 0).getDate();
+    //   }
+    //   const daysInDecember = getDaysInMonth(2022, 12);
 
-         
-          workbook.xlsx.writeBuffer().then((data) => {
-            let blob =  new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            fs.saveAs(blob, 'CarData.xlsx');
+    //   for ( let i = 1; i <= daysInDecember; i++){
+    //     if (i < 10) {
+    //       this.state.dateAll.push('0' + i + '/' + '12')
+    //     } else {
+    //       this.state.dateAll.push(i + '/' + '12')
+    //     }
+    //   }
+
+    //   const thu = {0: 'CN', 1: 'T2', 2: 'T3', 3: 'T4', 4: 'T5', 5: 'T6', 6:'T7'}
+
+    //   for ( let i = 1; i <= 31; i++){
+    //       this.state.thu.push(thu[new Date(`December ${i}, 2022 00:00:001`).getDay()])
+    //   }
+
+    // for(let i = 1; i <= 31 ; i++) {
+    //   if(thu[new Date(`December ${i}, 2022 00:00:00`).getDay()] === "T7" || thu[new Date(`December ${i}, 2022 00:00:00`).getDay()] === "CN"){
+    //     this.state.timeWork.push('x')
+    //   }else {
+    //     this.state.timeWork.push(8.00)
+    //   }
+    // }
+
+    //   workSheet.addRow(this.state.dateAll)
+    //   workSheet.addRow(this.state.thu)
+    //   workSheet.addRow(this.state.timeWork)
+
+    //   const rows = this.props.items.map((entry) => Object.values(entry))
+    //   workbook.getWorksheet("sheet1").addTable({
+    //     name: "sheet1",
+    //     ref: 'A1',
+    //     columns,
+    //     rows
+    //   })
+    //   workSheet.mergeCells("B6:E6")
+    //   workSheet.mergeCells("B7:E7")
+
+    //   workSheet.getTable("sheet1").removeColumns(0,1)
+    //   workSheet.getTable("sheet1").removeRows(1,1)
+    //   workSheet.getTable("sheet1").commit()
+
+    // workSheet.eachRow((row, rowNumber ) => {
+    //     row.eachCell((cell) => {
+    //       console.log(rowNumber);
+    //       if (rowNumber === 1) {
+    //         cell.fill = {
+    //           type: "pattern",
+    //           pattern: "solid",
+    //           fgColor: { argb: "FFFF00" },
+    //         };
+    //       }
+
+    //       if (rowNumber === 2) {
+    //         cell.fill = {
+    //           type: "pattern",
+    //           pattern: "solid",
+    //           fgColor: { argb: "FFF02" },
+    //         };
+    //       }
+
+    //       if (rowNumber === 3) {
+    //         cell.fill = {
+    //           type: "pattern",
+    //           pattern: "solid",
+    //           fgColor: { argb: "FFF" },
+    //         };
+    //       }
+
+    //       if (rowNumber === 4) {
+    //         cell.fill = {
+    //           type: "pattern",
+    //           pattern: "solid",
+    //           fgColor: { argb: "FFFF00" },
+    //         };
+    //       }
+
+    //       cell.border = {
+    //         top: { style: "thin" },
+    //         left: { style: "thin" },
+    //         bottom: { style: "thin" },
+    //         right: { style: "thin" },
+    //       };
+    //     });
+
+    //     row.commit();
+    //     });
+
+    workbook.xlsx.writeBuffer().then((data) => {
+      let blob = new Blob([data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
-         
+      fs.saveAs(blob, "CarData.xlsx");
+    });
+  };
+
+  render() {
+    let paginate = [];
+    let totalPage = this.props.totalPage;
+    let activePage = this.props.activePage;
+    for (let i = 1; i <= totalPage; i++) {
+      let button = (
+        <button
+          key={i}
+          onClick={() => {
+            this.props.textSearch
+              ? this.props.searchItems({
+                  activePage: i,
+                  textSearch: this.props.textSearch,
+                })
+              : this.props.paginateItems(i);
+          }}
+          style={{ backgroundColor: activePage === i ? "blue" : "white" }}
+        >
+          {i}
+        </button>
+      );
+      paginate.push(button);
     }
-    
-    render() {
-      let listData = []
-      if(this.props.items) {
-        listData = this.props.items.map((item , index) => {
-          return (
-              <tr key={index}>
-                <th>{item._id}</th>
-                <th>{item.Name}</th>
-                <th>{item.Age}</th>
-                <th>
-                  <button onClick={() =>this.props.updateItems({id : item._id  })}>UPDATE</button>
-                  <button onClick={() =>this.props.deleteItems({id : item._id})}>DELETE</button>
-                </th>
-                <th>
-                  <input type="checkbox"  onClick={() => this.handleId(item._id)} value={item._id}  checked={this.state.idLock.includes(item._id)} onChange={()=>{}}    />
-                  </th>
-               
-              </tr>
-              
-          )
-        }
-        )
-        
-      }
-      
+
+    let listData = [];
+    if (this.props.items) {
+      listData = this.props.items.map((item, index) => {
         return (
-            <div>
-                <input type="file" onChange={(e) => this.setState({file : e.target.files})}/>
-                <button onClick={() => this.props.addExcelItems({file : this.state.file})}>IMPORT</button>
-                <br/>
-                <input onChange={(e) => this.isChange(e , "name")} value={this.state.name}/>
-                <button onClick={() => this.props.addItems({name : this.state.name , age : this.state.age})}>ADD</button>
-                <br />
-                <input onChange={(e) => this.isChange(e , "nameUpdate")} value={this.state.nameUpdate}/>
-                <button onClick={() => this.props.updateItems({name : this.state.nameUpdate , age : this.state.ageUpdate})}>UPDATE</button>
-           
-                <button onClick={() => this.props.deleteAllItems({idLock : this.state.idLock })}>DELETEALL</button>
-               
+          <tr key={index}>
+            <th>{item._id}</th>
+            <th>{item.Name}</th>
+            <th>{item.Age}</th>
+            <th>
+              <button onClick={() => this.props.updateItems({ id: item._id })}>
+                UPDATE
+              </button>
+              <button onClick={() => this.props.deleteItems({ id: item._id })}>
+                DELETE
+              </button>
               {/* <a href="http://localhost:3001/item/downloadExcel" variant="contained"  >
-              <button>export</button>
-                </a>  */}
-              
-               
-              <button variant="contained" onClick={ () => this.handleExportAll() }>Export All</button>
+                    <button>export</button>
+                  </a>  */}
+            </th>
 
-              <button onClick={ () => this.handleExport()}>Export</button>
-             
+            <th>
+              <input
+                type="checkbox"
+                onClick={() => this.handleId(item._id)}
+                value={item._id}
+                checked={this.state.idLock.includes(item._id)}
+                onChange={() => {}}
+              />
+            </th>
+          </tr>
+        );
+      });
+    }
 
-             
-           
-           {/* <CSVLink
+    return (
+      <div>
+        <input
+          type="file"
+          onChange={(e) => this.setState({ file: e.target.files })}
+        />
+        <button
+          onClick={() => this.props.addExcelItems({ file: this.state.file })}
+        >
+          IMPORT
+        </button>
+        <br />
+        <input
+          onChange={(e) => this.isChange(e, "name")}
+          value={this.state.name}
+        />
+        <button
+          onClick={() =>
+            this.props.addItems({ name: this.state.name, age: this.state.age })
+          }
+        >
+          ADD
+        </button>
+        <br />
+        <input
+          onChange={(e) => this.isChange(e, "nameUpdate")}
+          value={this.state.nameUpdate}
+        />
+        <button
+          onClick={() =>
+            this.props.updateItems({
+              name: this.state.nameUpdate,
+              age: this.state.ageUpdate,
+            })
+          }
+        >
+          UPDATE
+        </button>
+
+        <button
+          onClick={() =>
+            this.props.deleteAllItems({ idLock: this.state.idLock })
+          }
+        >
+          DELETEALL
+        </button>
+
+        <a href="http://localhost:3001/item/downloadExcel" variant="contained">
+          <button>export</button>
+        </a>
+
+        <button variant="contained" onClick={() => this.handleExportAll()}>
+          Export All
+        </button>
+
+        <button onClick={() => this.handleExport()}>Export</button>
+
+        {/* <CSVLink
                 filename={"my-file.csv"}
                 target="_blank"
                 data={this.props.items}
@@ -230,19 +407,17 @@ class Items extends Component {
                 Download me
             </CSVLink>    */}
 
-            <table className="table table-striped table-inverse table-responsive">
-              <thead className="thead-inverse">
-                <tr>
-                  <th>STT</th>
-                  <th>Name</th>
-                  <th>Age</th>
-                </tr>
-                </thead>
-                <tbody>
-                 {listData}
-                </tbody>
-            </table>
-        
+        <table className="table table-striped table-inverse table-responsive">
+          <thead className="thead-inverse">
+            <tr>
+              <th>STT</th>
+              <th>Name</th>
+              <th>Age</th>
+            </tr>
+          </thead>
+          <tbody>{listData}</tbody>
+        </table>
+        {paginate}
         {/* <h2>Bordered Table</h2>
   <p>The .table-bordered class adds borders to a table:</p>            
   <table class="table table-bordered">
@@ -330,9 +505,9 @@ class Items extends Component {
 
     </tbody>
   </table> */}
-            </div>
-        );
-    }
+      </div>
+    );
+  }
 }
 
 export default Items;

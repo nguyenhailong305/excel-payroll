@@ -22,7 +22,7 @@ function * addItem(action) {
     try {
         yield callAPI('POST' , "" , action.payload)
         yield put(actions.addSuccess())
-        yield put(actions.getRequest())
+        yield put(actions.paginateRequest(1))
     } catch (error) {
         yield put(actions.addFailure(error))
     }
@@ -35,7 +35,7 @@ function * addExcel(action) {
         formData.append('file' , action.payload.file[0])
         yield importAPI('POST' , "/excel" , formData)
         yield put(actions.addExcelSuccess())
-        yield put(actions.getRequest())
+        yield put(actions.paginateRequest(1))
     } catch (error) {
         yield put(actions.addFailure(error))
     }
@@ -45,7 +45,7 @@ function * deleteItem(action) {
     try {
         yield callAPI('DELETE' , `/${action.payload.id}` , "")
         yield put(actions.deleteSuccess())
-        yield put(actions.getRequest())
+        yield put(actions.paginateRequest(1))
     } catch (error) {
         yield put(actions.deleteFailure(error))
     }
