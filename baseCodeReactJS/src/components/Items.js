@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable no-undef */
 import Table from "react-bootstrap/Table";
 import React, { Component } from "react";
@@ -219,91 +220,16 @@ class Items extends Component {
     worksheet.insertRow(4, columnssss);
     worksheet.insertRow(5, columnsssss);
 
-    worksheet.getRow(1).fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "93ADC9" },
-    };
-
-    worksheet.getRow(1).border = {
+    const border = {
       top: { style: "thin" },
       left: { style: "thin" },
       bottom: { style: "thin" },
       right: { style: "thin" },
     };
-
-    worksheet.getRow(2).border = {
-      top: { style: "thin" },
-      left: { style: "thin" },
-      bottom: { style: "thin" },
-      right: { style: "thin" },
-    };
-    worksheet.getRow(3).border = {
-      top: { style: "thin" },
-      left: { style: "thin" },
-      bottom: { style: "thin" },
-      right: { style: "thin" },
-    };
-    worksheet.getRow(4).border = {
-      top: { style: "thin" },
-      left: { style: "thin" },
-      bottom: { style: "thin" },
-      right: { style: "thin" },
-    };
-    worksheet.getRow(5).border = {
-      top: { style: "thin" },
-      left: { style: "thin" },
-      bottom: { style: "thin" },
-      right: { style: "thin" },
-    };
-    worksheet.getRow(6).border = {
-      top: { style: "thin" },
-      left: { style: "thin" },
-      bottom: { style: "thin" },
-      right: { style: "thin" },
-    };
-    worksheet.getRow(7).border = {
-      top: { style: "thin" },
-      left: { style: "thin" },
-      bottom: { style: "thin" },
-      right: { style: "thin" },
-    };
-    worksheet.getRow(8).border = {
-      top: { style: "thin" },
-      left: { style: "thin" },
-      bottom: { style: "thin" },
-      right: { style: "thin" },
-    };
-    worksheet.getRow(9).border = {
-      top: { style: "thin" },
-      left: { style: "thin" },
-      bottom: { style: "thin" },
-      right: { style: "thin" },
-    };
-    worksheet.getRow(10).border = {
-      top: { style: "thin" },
-      left: { style: "thin" },
-      bottom: { style: "thin" },
-      right: { style: "thin" },
-    };
-    worksheet.getRow(11).border = {
-      top: { style: "thin" },
-      left: { style: "thin" },
-      bottom: { style: "thin" },
-      right: { style: "thin" },
-    };
-    worksheet.getRow(12).border = {
-      top: { style: "thin" },
-      left: { style: "thin" },
-      bottom: { style: "thin" },
-      right: { style: "thin" },
-    };
-    worksheet.getRow(13).border = {
-      top: { style: "thin" },
-      left: { style: "thin" },
-      bottom: { style: "thin" },
-      right: { style: "thin" },
-    };
+    
+    for (let i = 1; i <= 13; i++) {
+      worksheet.getRow(i).border = border;
+    }
 
     worksheet.getRow(1).font = {
       color: { argb: "000000" },
@@ -315,202 +241,57 @@ class Items extends Component {
       fgColor: { argb: "3B86CB" },
     };
 
-    worksheet.getRow(1).alignment = {
-      horizontal: "center",
-      vertical: "center",
-    };
+    for (let i = 1; i <= 5; i++) {
+      worksheet.getRow(i).alignment = {
+        horizontal: "center",
+        vertical: "center",
+      };
+    }
+  
+    for (let i = 6; i <= 13; i++) {
+      worksheet.getRow(i).alignment = {
+        horizontal: "right",
+      };
+    }
 
-    worksheet.getRow(2).alignment = {
-      horizontal: "center",
-      vertical: "center",
-    };
-    worksheet.getRow(3).alignment = {
-      horizontal: "center",
-      vertical: "center",
-    };
-    worksheet.getRow(4).alignment = {
-      horizontal: "center",
-      vertical: "center",
-    };
-    worksheet.getRow(5).alignment = {
-      horizontal: "center",
-      vertical: "center",
-    };
     worksheet.getCell("A1").alignment = {
       horizontal: "left",
       vertical: "middle",
     };
 
-    worksheet.getCell("A3").alignment = {
-      horizontal: "left",
-    };
-    worksheet.getCell("A4").alignment = {
-      horizontal: "left",
-    };
-    worksheet.getCell("A5").alignment = {
-      horizontal: "left",
-    };
-    worksheet.getCell("D2").fill = {
+    worksheet.getRow(1).fill = {
       type: "pattern",
       pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("D3").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("D4").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("D5").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("E2").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("E3").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("E4").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("E5").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("K2").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("K3").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("K4").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("K5").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("L2").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("L3").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("L4").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("L5").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("R2").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("R3").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("R4").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("R5").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("S2").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("S3").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("S4").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("S5").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
+      fgColor: { argb: "93ADC9" },
     };
 
-    worksheet.getCell("Y2").fill = {
+    const cell2s = ["AH3" , "AI3" , "AI4" , "AI5", "AJ3" , "AJ4","AJ5",];
+
+    for (const cell of cell2s) {
+      worksheet.getCell(cell).alignment = {
+        horizontal: "right"
+    };
+  }
+
+    const cells = ['A3', 'A4', 'A5' , 'A6' , 'A7' , 'A8' ,'A9','A10','A11','A12' ,'A13'];
+
+    for (const cell of cells) {
+    worksheet.getCell(cell).alignment = {
+      horizontal: "left"
+  };
+}
+
+
+const cell1s = ['D2', 'D3', 'D4' , 'D5' , 'E2' , 'E3' , 'E4' , 'E5' , 'K2' , 'K3' , 'K4' , 'K5' , 'L2' , 'L3' , 'L4' , 'L5' , 'R2' , 'R3' , 'R4' , 'R5', 'S2' , 'S3' , 'S4' , 'S5' , 'Y2' , 'Y3' , 'Y4' , 'Y5' , 'Z2' , 'Z3' , 'Z4' , 'Z5' ,  ];
+
+    for (const cell of cell1s) {
+    worksheet.getCell(cell).fill = {
       type: "pattern",
       pattern: "solid",
       fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("Y3").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("Y4").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("Y5").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("Z2").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("Z3").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("Z4").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
-    worksheet.getCell("Z5").fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "6AA653" },
-    };
+  };
+}
+
     table.commit();
 
     worksheet.mergeCells("AF1:AF2");
@@ -565,30 +346,50 @@ class Items extends Component {
     const num1 = 39773;
     const num2 = 59659;
     const num3 = 79545;
+    const num4 = 500000;
+
 
     // Convert the number to a string with the desired format
     const str1 = num1.toLocaleString('vi-VN', { useGrouping: true }) + ' đ';
     const str2 = num2.toLocaleString('vi-VN', { useGrouping: true }) + ' đ';
     const str3 = num3.toLocaleString('vi-VN', { useGrouping: true }) + ' đ';
+    const str4 = num4.toLocaleString('vi-VN', { useGrouping: true }) + ' đ';
+    
     
     // Set the value of the cell to the formatted string
     worksheet.getCell("AI3").value = str1;
     worksheet.getCell("AI4").value = str2;
     worksheet.getCell("AI5").value = str3;
+     
+      const result = num1 * sum;
+      const str5 = result.toLocaleString('vi-VN', { useGrouping: true }) + ' đ';
+      worksheet.getCell('AJ3').value = str5;
+      worksheet.getCell("AJ4").value = '0 đ';
+      worksheet.getCell("AJ5").value = '0 đ';
+      worksheet.getCell("B6").value = str4;
+      worksheet.getCell("B7").value = '0 đ';
+      worksheet.getCell("B8").value = '0 đ';
+      worksheet.getCell("B9").value = '0 đ';
+      worksheet.getCell("B10").value = '0 đ';
+      worksheet.getCell("B11").value = '0 đ';
+      worksheet.getCell("B12").value = '0 đ';
 
-    worksheet.getCell('B1').value = { formula 'A1+C1'};
+     const result1 = result + num4;
+     const str6 = result1.toLocaleString('vi-VN', { useGrouping: true }) + ' đ';
+     worksheet.getCell("B13").value = str6;
+  
 
     worksheet.mergeCells("A1:A2");
-    worksheet.mergeCells("B6:AF6");
-    worksheet.mergeCells("B7:AF7");
-    worksheet.mergeCells("B8:AF8");
-    worksheet.mergeCells("B9:AF9");
-    worksheet.mergeCells("B10:AF10");
-    worksheet.mergeCells("B11:AF11");
-    worksheet.mergeCells("B12:AF12");
-    worksheet.mergeCells("B13:AF13");
+    worksheet.mergeCells("B6:AJ6");
+    worksheet.mergeCells("B7:AJ7");
+    worksheet.mergeCells("B8:AJ8");
+    worksheet.mergeCells("B9:AJ9");
+    worksheet.mergeCells("B10:AJ10");
+    worksheet.mergeCells("B11:AJ11");
+    worksheet.mergeCells("B12:AJ12");
+    worksheet.mergeCells("B13:AJ13");
 
-    worksheet.getCell("A2").value = "Vuong Quoc Tuan";
+    worksheet.getCell("A2").value = "Vương Quốc Tuấn";
     worksheet.getCell("A3").value = "Thời gian làm việc";
     worksheet.getCell("A4").value = "Thời gian OT 150%";
     worksheet.getCell("A5").value = "Thời gian OT 200%";
