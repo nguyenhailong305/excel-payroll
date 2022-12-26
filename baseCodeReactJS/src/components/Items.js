@@ -6,7 +6,7 @@ import * as fs from "file-saver";
 import { CSVLink } from "react-csv";
 const Excel = require("exceljs");
 const dayjs = require("dayjs");
-import ('dayjs/locale/vi')
+import("dayjs/locale/vi");
 class Items extends Component {
   state = {
     id: "",
@@ -22,11 +22,10 @@ class Items extends Component {
     dateAll: [],
     month: [],
     week: [],
-    timeworkInfo : [],
-    timework200 : []
+    timeworkInfo: [],
+    timework200: [],
+    timework300: [],
   };
-
-  
 
   handleId = (a) => {
     const idLockNew = [...this.state.idLock];
@@ -83,7 +82,6 @@ class Items extends Component {
   //         fs.saveAs(blob, 'CarData.xlsx');
   //   });
   // }
-  
 
   handleExportAll = async (sheetName) => {
     this.props.items.map((item, key) => (item._id = key + 1));
@@ -94,80 +92,92 @@ class Items extends Component {
     // Set the column widths for columns A, B, and C
     worksheet.getColumn(1).width = 30;
 
-    
-  
-
     const year = 2022;
-    const month = 11;
+    const month = 8;
 
-    const daysInMonth = dayjs().year(year).month(month).daysInMonth();  
+    const daysInMonth = dayjs().year(year).month(month).daysInMonth();
     // Add the weekdays, days, and months of the month to the worksheet
     // const daysInMonth = dayjs().daysInMonth();
-    console.log(daysInMonth , 'month' )
+    console.log(daysInMonth, "month");
     let a = [];
     let b = [];
     for (let i = 1; i <= daysInMonth; i++) {
       const date = dayjs().year(year).month(month).date(i);
-      const url = (worksheet.getCell(`B1`).value = date.format('D/M'))
+      const url = (worksheet.getCell(`B1`).value = date.format("DD/M"));
       a.push(url);
       this.setState({
         month: a,
       });
     }
 
+    dayjs.locale("vi");
 
-    
-
-    dayjs.locale('vi');
-  
-    
     for (let i = 0; i <= daysInMonth; i++) {
       const date = dayjs().year(year).month(month).date(i); // update the day inside the loop
-      const weekday = date.format('dd');  // format the date as the name of the weekday in Vietnamese
-      
+      const weekday = date.format("dd"); // format the date as the name of the weekday in Vietnamese
+
       const cell = worksheet.getCell(`B2`);
-      if (cell) {  // check if the cell exists
-        const urls = cell.value = weekday;  // access the value property if the cell exists
+      if (cell) {
+        // check if the cell exists
+        const urls = (cell.value = weekday); // access the value property if the cell exists
         b.push(urls);
         this.setState({
-          week: b
+          week: b,
         });
       }
     }
 
-
     const timework = [];
-    for(let i = 0 ; i <= daysInMonth ; i++) {
-      const date = dayjs().year(year).month(month).date(i);  // update the day inside the loop
-      const weekday = date.format('dd');
+    for (let i = 0; i <= daysInMonth; i++) {
+      const date = dayjs().year(year).month(month).date(i); // update the day inside the loop
+      const weekday = date.format("dd");
       const url = (worksheet.getCell(`B1`).value = dayjs()
         .date(i)
         .format("DD/M"));
-      if(weekday === 'T7' || weekday === 'CN') {
-        timework.push('x')
-      // eslint-disable-next-line no-mixed-operators
-      }else if (weekday === 'T5' && url === '01/12' || weekday === 'T6' && url === '02/12') {
-        timework.push('0,00')
-      }else {
-        timework.push('8,00')
+      if (weekday === "T7" || weekday === "CN") {
+        timework.push("x");
+        // eslint-disable-next-line no-mixed-operators
+      } else if (
+        (weekday === "T5" && url === "01/12") ||
+        (weekday === "T6" && url === "02/12")
+      ) {
+        timework.push("0,00");
+      } else if (weekday === "T2" && url === "26/12") {
+        timework.push("4,00");
+      } else {
+        timework.push("8,00");
       }
       this.setState({
-        timeworkInfo : timework 
-      })
+        timeworkInfo: timework,
+      });
     }
 
     const timework200 = [];
-    for(let i = 0; i <= daysInMonth ; i++) {
+    for (let i = 0; i <= daysInMonth; i++) {
       const date = dayjs().year(year).month(month).date(i); // update the day inside the loop
-      const weekday = date.format('dd');
-      if(weekday === 'T7' || weekday === 'CN') {
-        timework200.push('x')
-      }else {
-        timework200.push('0')
+      const weekday = date.format("dd");
+      if (weekday === "T7" || weekday === "CN") {
+        timework200.push("x");
+      } else {
+        timework200.push("0");
       }
       this.setState({
-        timework200 : timework200 
-      })
+        timework200: timework200,
+      });
+    }
+
+    const timework300 = [];
+    for (let i = 0; i <= daysInMonth; i++) {
+      const date = dayjs().year(year).month(month).date(i); // update the day inside the loop
+      const weekday = date.format("dd");
+      if (weekday === "T7" || weekday === "CN") {
+        timework300.push("x");
+      } else {
+        timework300.push("0");
+      }
+      this.setState({
+        timework300: timework300,
+      });
     }
 
     // Day of the week
@@ -176,7 +186,6 @@ class Items extends Component {
     }));
 
     console.log(columns, "111");
-
 
     const columnss = this.state.week.map((items) => items);
 
@@ -190,6 +199,9 @@ class Items extends Component {
 
     console.log(columnssss, "2222");
 
+    const columnsssss = this.state.timework300.map((items) => items);
+
+    console.log(columnsssss, "2222");
 
     const rows = this.props.items.map((entry) => Object.values(entry));
     console.log(rows, "aaaaaaaaaaa");
@@ -205,16 +217,351 @@ class Items extends Component {
     worksheet.insertRow(2, columnss);
     worksheet.insertRow(3, columnsss);
     worksheet.insertRow(4, columnssss);
+    worksheet.insertRow(5, columnsssss);
 
-    worksheet.getCell('A2').font = {
-      name: 'Arial Black',
-      color: { argb: 'FF00FF00' },
-      family: 2,
-      size: 14,
-      italic: true
+    worksheet.getRow(1).fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "93ADC9" },
     };
 
+    worksheet.getRow(1).border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      bottom: { style: "thin" },
+      right: { style: "thin" },
+    };
+
+    worksheet.getRow(2).border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      bottom: { style: "thin" },
+      right: { style: "thin" },
+    };
+    worksheet.getRow(3).border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      bottom: { style: "thin" },
+      right: { style: "thin" },
+    };
+    worksheet.getRow(4).border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      bottom: { style: "thin" },
+      right: { style: "thin" },
+    };
+    worksheet.getRow(5).border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      bottom: { style: "thin" },
+      right: { style: "thin" },
+    };
+    worksheet.getRow(6).border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      bottom: { style: "thin" },
+      right: { style: "thin" },
+    };
+    worksheet.getRow(7).border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      bottom: { style: "thin" },
+      right: { style: "thin" },
+    };
+    worksheet.getRow(8).border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      bottom: { style: "thin" },
+      right: { style: "thin" },
+    };
+    worksheet.getRow(9).border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      bottom: { style: "thin" },
+      right: { style: "thin" },
+    };
+    worksheet.getRow(10).border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      bottom: { style: "thin" },
+      right: { style: "thin" },
+    };
+    worksheet.getRow(11).border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      bottom: { style: "thin" },
+      right: { style: "thin" },
+    };
+    worksheet.getRow(12).border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      bottom: { style: "thin" },
+      right: { style: "thin" },
+    };
+    worksheet.getRow(13).border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      bottom: { style: "thin" },
+      right: { style: "thin" },
+    };
+
+    worksheet.getRow(1).font = {
+      color: { argb: "000000" },
+    };
+
+    worksheet.getRow(2).fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "3B86CB" },
+    };
+
+    worksheet.getRow(1).alignment = {
+      horizontal: "center",
+      vertical: "center",
+    };
+
+    worksheet.getRow(2).alignment = {
+      horizontal: "center",
+      vertical: "center",
+    };
+    worksheet.getRow(3).alignment = {
+      horizontal: "center",
+      vertical: "center",
+    };
+    worksheet.getRow(4).alignment = {
+      horizontal: "center",
+      vertical: "center",
+    };
+    worksheet.getRow(5).alignment = {
+      horizontal: "center",
+      vertical: "center",
+    };
+    worksheet.getCell("A1").alignment = {
+      horizontal: "left",
+      vertical: "middle",
+    };
+
+    worksheet.getCell("A3").alignment = {
+      horizontal: "left",
+    };
+    worksheet.getCell("A4").alignment = {
+      horizontal: "left",
+    };
+    worksheet.getCell("A5").alignment = {
+      horizontal: "left",
+    };
+    worksheet.getCell("D2").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("D3").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("D4").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("D5").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("E2").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("E3").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("E4").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("E5").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("K2").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("K3").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("K4").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("K5").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("L2").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("L3").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("L4").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("L5").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("R2").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("R3").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("R4").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("R5").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("S2").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("S3").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("S4").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("S5").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+
+    worksheet.getCell("Y2").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("Y3").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("Y4").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("Y5").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("Z2").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("Z3").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("Z4").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
+    worksheet.getCell("Z5").fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "6AA653" },
+    };
     table.commit();
+
+    worksheet.mergeCells("AF1:AF2");
+    worksheet.mergeCells("AG1:AG2");
+    worksheet.mergeCells("AH1:AH2");
+    worksheet.mergeCells("AI1:AI2");
+    worksheet.mergeCells("AJ1:AJ2");
+
+    worksheet.getColumn(32).width = 15;
+    worksheet.getColumn(33).width = 35;
+    worksheet.getColumn(34).width = 20;
+    worksheet.getColumn(35).width = 20;
+    worksheet.getColumn(36).width = 20;
+
+    worksheet.getCell("AF1").value = "Tổng cộng";
+    worksheet.getCell("AG1").value = "Số ngày công làm việc thực tế ";
+    worksheet.getCell("AH1").value = "Đơn giá 1 tháng (VNĐ)";
+    worksheet.getCell("AI1").value = "Đơn giá giờ công";
+    worksheet.getCell("AJ1").value = "Chi phí tháng (VNĐ)";
+
+    const newColumnsss = columnsss.slice(1);
+    console.log(newColumnsss, "new");
+
+    const sum = newColumnsss.reduce((accumulator, currentValue) => {
+      if (currentValue !== "x") {
+        return accumulator + parseFloat(currentValue.replace(",", "."));
+      }
+      return accumulator;
+    }, 0);
+
+    console.log(sum, "sum");
+
+    worksheet.getCell("AF3").value = sum;
+
+    // const sum = array.reduce((accumulator, currentValue) => {
+    //   if (typeof currentValue === 'number') {
+    //     return accumulator + currentValue;
+    //   }
+    //   return accumulator;
+    // }, 152);
+
+    // console.log(sum , 'sum');
+
+    // const sum = row.values.reduce((accumulator, currentValue, index) => {
+    //   if (this.state.timeworkInfo !== 'x') {
+    //     return accumulator + currentValue;
+    //   }
+    //   return accumulator;
+    // });
+    // console.log(sum,'ccccccccccccccc');
+    // worksheet.getCell('AF3').value = sum;
 
     worksheet.mergeCells("A1:A2");
     worksheet.mergeCells("B6:AF6");
