@@ -1,10 +1,7 @@
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-undef */
-import Table from "react-bootstrap/Table";
 import React, { Component } from "react";
 // import * as XLSX from 'xlsx';
 import * as fs from "file-saver";
-import { CSVLink } from "react-csv";
+// import { CSVLink } from "react-csv";
 const Excel = require("exceljs");
 const dayjs = require("dayjs");
 import("dayjs/locale/vi");
