@@ -542,26 +542,41 @@ class Items extends Component {
     }, 0);
 
     console.log(sum, "sum");
+    const sty = sum + ",00";
+    worksheet.getCell("AF3").value = sty;
+    worksheet.getCell("AF4").value = 0;
+    worksheet.getCell("AF5").value = 0;
+    worksheet.getCell("AG3").value = '19,5';
+    worksheet.getCell("AG4").value = 0;
+    worksheet.getCell("AG5").value = 0;
 
-    worksheet.getCell("AF3").value = sum;
 
-    // const sum = array.reduce((accumulator, currentValue) => {
-    //   if (typeof currentValue === 'number') {
-    //     return accumulator + currentValue;
-    //   }
-    //   return accumulator;
-    // }, 152);
+    const num = 7000000;
 
-    // console.log(sum , 'sum');
+    // Convert the number to a string with the desired format
+    const str = num.toLocaleString('vi-VN', { useGrouping: true }) + ' đ';
+    
+    // Set the value of the cell to the formatted string
+    worksheet.getCell("AH3").value = str;
+    worksheet.getCell("AH4").value = '0 đ';
+    worksheet.getCell("AH5").value = '0 đ';
 
-    // const sum = row.values.reduce((accumulator, currentValue, index) => {
-    //   if (this.state.timeworkInfo !== 'x') {
-    //     return accumulator + currentValue;
-    //   }
-    //   return accumulator;
-    // });
-    // console.log(sum,'ccccccccccccccc');
-    // worksheet.getCell('AF3').value = sum;
+
+    const num1 = 39773;
+    const num2 = 59659;
+    const num3 = 79545;
+
+    // Convert the number to a string with the desired format
+    const str1 = num1.toLocaleString('vi-VN', { useGrouping: true }) + ' đ';
+    const str2 = num2.toLocaleString('vi-VN', { useGrouping: true }) + ' đ';
+    const str3 = num3.toLocaleString('vi-VN', { useGrouping: true }) + ' đ';
+    
+    // Set the value of the cell to the formatted string
+    worksheet.getCell("AI3").value = str1;
+    worksheet.getCell("AI4").value = str2;
+    worksheet.getCell("AI5").value = str3;
+
+    worksheet.getCell('B1').value = { formula 'A1+C1'};
 
     worksheet.mergeCells("A1:A2");
     worksheet.mergeCells("B6:AF6");
