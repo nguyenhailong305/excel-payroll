@@ -94,17 +94,21 @@ class Items extends Component {
     // Set the column widths for columns A, B, and C
     worksheet.getColumn(1).width = 30;
 
+    
   
 
+    const year = 2022;
+    const month = 11;
+
+    const daysInMonth = dayjs().year(year).month(month).daysInMonth();  
     // Add the weekdays, days, and months of the month to the worksheet
-    const daysInMonth = dayjs().daysInMonth();
+    // const daysInMonth = dayjs().daysInMonth();
     console.log(daysInMonth , 'month' )
     let a = [];
     let b = [];
     for (let i = 1; i <= daysInMonth; i++) {
-      const url = (worksheet.getCell(`B1`).value = dayjs()
-        .date(i)
-        .format("D/M"));
+      const date = dayjs().year(year).month(month).date(i);
+      const url = (worksheet.getCell(`B1`).value = date.format('D/M'))
       a.push(url);
       this.setState({
         month: a,
@@ -116,8 +120,9 @@ class Items extends Component {
 
     dayjs.locale('vi');
   
-    for (let i = 1; i <= daysInMonth; i++) {
-      const date = dayjs().add(i, 'day');  // update the day inside the loop
+    
+    for (let i = 0; i <= daysInMonth; i++) {
+      const date = dayjs().year(year).month(month).date(i); // update the day inside the loop
       const weekday = date.format('dd');  // format the date as the name of the weekday in Vietnamese
       
       const cell = worksheet.getCell(`B2`);
@@ -132,8 +137,8 @@ class Items extends Component {
 
 
     const timework = [];
-    for(let i = 1 ; i <= daysInMonth ; i++) {
-      const date = dayjs().add(i, 'day');  // update the day inside the loop
+    for(let i = 0 ; i <= daysInMonth ; i++) {
+      const date = dayjs().year(year).month(month).date(i);  // update the day inside the loop
       const weekday = date.format('dd');
       const url = (worksheet.getCell(`B1`).value = dayjs()
         .date(i)
@@ -152,8 +157,8 @@ class Items extends Component {
     }
 
     const timework200 = [];
-    for(let i = 1; i <= daysInMonth ; i++) {
-      const date = dayjs().add(i, 'day');  // update the day inside the loop
+    for(let i = 0; i <= daysInMonth ; i++) {
+      const date = dayjs().year(year).month(month).date(i); // update the day inside the loop
       const weekday = date.format('dd');
       if(weekday === 'T7' || weekday === 'CN') {
         timework200.push('x')
@@ -200,6 +205,15 @@ class Items extends Component {
     worksheet.insertRow(2, columnss);
     worksheet.insertRow(3, columnsss);
     worksheet.insertRow(4, columnssss);
+
+    worksheet.getCell('A2').font = {
+      name: 'Arial Black',
+      color: { argb: 'FF00FF00' },
+      family: 2,
+      size: 14,
+      italic: true
+    };
+
     table.commit();
 
     worksheet.mergeCells("A1:A2");
